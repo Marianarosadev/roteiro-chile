@@ -66,7 +66,7 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Alimentação",
           "paymentMethod": "cartão wise ou dinheiro espécie",
           "importantInfo": null,
-          "paymentStatus": "não pago"
+          "paymentStatus": "não pago",
         },
         {
           "id": "d1-act-6",
@@ -78,7 +78,7 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Compras",
           "paymentMethod": "cartão wise ou dinheiro espécie",
           "importantInfo": null,
-          "paymentStatus": "não pago"
+          "paymentStatus": "não pago",
         },
         {
           "id": "d1-act-7",
@@ -370,7 +370,8 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Transporte",
           "paymentMethod": null,
           "importantInfo": "Janela de 13:30 a 14:30 (inverno, pôr do sol mais cedo)",
-          "paymentStatus": null
+          "paymentStatus": null,
+          "participants": ["Weverton", "Neto"]
         },
         {
           "id": "d3-act-8",
@@ -382,7 +383,8 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Transporte",
           "paymentMethod": null,
           "importantInfo": null,
-          "paymentStatus": null
+          "paymentStatus": null,
+          "participants": ["Weverton", "Neto"]
         },
         {
           "id": "d3-act-9",
@@ -394,7 +396,8 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Lazer / Atração",
           "paymentMethod": "cartão wise ou dinheiro espécie",
           "importantInfo": "Pacote inclui traslado, degustação e jantar",
-          "paymentStatus": "não pago"
+          "paymentStatus": "não pago",
+          "participants": ["Weverton", "Neto"]
         },
         {
           "id": "d3-act-10",
@@ -406,7 +409,8 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Lazer / Atração",
           "paymentMethod": null,
           "importantInfo": "Incluso no tour da vinícola",
-          "paymentStatus": null
+          "paymentStatus": null,
+          "participants": ["Weverton", "Neto"]
         },
         {
           "id": "d3-act-11",
@@ -418,7 +422,8 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Alimentação",
           "paymentMethod": null,
           "importantInfo": "Incluso no tour da vinícola",
-          "paymentStatus": null
+          "paymentStatus": null,
+          "participants": ["Weverton", "Neto"]
         },
         {
           "id": "d3-act-12",
@@ -430,7 +435,8 @@ export const ITINERARY_DATA: Itinerary = {
           "activityType": "Transporte",
           "paymentMethod": null,
           "importantInfo": "Traslado de retorno incluso no tour",
-          "paymentStatus": null
+          "paymentStatus": null,
+          "participants": ["Weverton", "Neto"]
         }
       ]
     },

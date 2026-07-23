@@ -10,6 +10,7 @@ export interface Activity {
   importantInfo?: string | null;
   paymentStatus?: string | null;
   completed?: boolean;
+  participants?: string[];
 }
 
 export interface ItineraryDay {

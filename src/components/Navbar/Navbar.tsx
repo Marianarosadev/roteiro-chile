@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plane, Settings, Compass, Wallet, MapPin, Calendar } from 'lucide-react';
+import { Plane, Settings, Compass, Wallet, MapPin, Calendar, User } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 
 export type CalendarViewMode = 'day' | 'week' | 'month';
@@ -13,6 +13,8 @@ interface NavbarProps {
   onToggleCalendar?: () => void;
   calendarViewMode?: CalendarViewMode;
   onChangeCalendarViewMode?: (mode: CalendarViewMode) => void;
+  currentUser?: string;
+  onChangeCurrentUser?: (user: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = React.memo(({
@@ -24,6 +26,8 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
   onToggleCalendar,
   calendarViewMode = 'month',
   onChangeCalendarViewMode,
+  currentUser = 'Todos',
+  onChangeCurrentUser,
 }) => {
   return (
     <header className="w-full bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 shadow-sm">
@@ -62,6 +66,26 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
               <span className="text-slate-300">{formatCurrency(totalCLP, 'CLP')}</span>
             </div>
           </div>
+
+          {/* User Selector Dropdown */}
+          {onChangeCurrentUser && (
+            <div className="flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/80 rounded-lg px-2 sm:px-3 py-1.5 text-xs select-none shrink-0">
+              <User className="w-3.5 h-3.5 text-sky-400" />
+              <label htmlFor="user-select" className="text-slate-400 hidden xs:inline font-medium">Usuário:</label>
+              <select
+                id="user-select"
+                value={currentUser}
+                onChange={(e) => onChangeCurrentUser(e.target.value)}
+                className="bg-transparent text-white font-semibold focus:outline-none cursor-pointer pr-1"
+              >
+                <option value="Todos" className="bg-slate-800 text-white font-medium">Todos</option>
+                <option value="Mariana" className="bg-slate-800 text-white font-medium">Mariana</option>
+                <option value="Lara" className="bg-slate-800 text-white font-medium">Lara</option>
+                <option value="Weverton" className="bg-slate-800 text-white font-medium">Weverton</option>
+                <option value="Neto" className="bg-slate-800 text-white font-medium">Neto</option>
+              </select>
+            </div>
+          )}
 
           {/* Quick Action Buttons */}
           <div className="flex items-center gap-2">

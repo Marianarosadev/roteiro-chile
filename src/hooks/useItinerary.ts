@@ -14,14 +14,33 @@ export function useItinerary() {
     }));
   });
 
+  const [currentUser, setCurrentUser] = useState<string>('Todos');
+
+  const filteredItineraryDays = useMemo(() => {
+    return itineraryDays.map((day) => {
+      const filteredActivities = day.activities.filter((act) => {
+        if (currentUser && currentUser !== 'Todos') {
+          if (act.participants && act.participants.length > 0) {
+            return act.participants.includes(currentUser);
+          }
+        }
+        return true;
+      });
+      return {
+        ...day,
+        activities: filteredActivities,
+      };
+    });
+  }, [itineraryDays, currentUser]);
+
+  const selectedDayHook = useSelectedDay(filteredItineraryDays);
+  const { currentDay } = selectedDayHook;
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [hideCompleted, setHideCompleted] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [hoveredActivityId, setHoveredActivityId] = useState<string | null>(null);
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
-
-  const selectedDayHook = useSelectedDay(itineraryDays);
-  const { currentDay } = selectedDayHook;
 
   // Toggle activity completion status
   const toggleActivityCompleted = useCallback((activityId: string) => {
@@ -60,10 +79,11 @@ export function useItinerary() {
     });
   }, [currentDay, hideCompleted, selectedCategory, searchQuery]);
 
-  const { dayTotals, tripTotals } = useTotals(itineraryDays, currentDay?.activities || []);
+  const { dayTotals, tripTotals } = useTotals(filteredItineraryDays, currentDay?.activities || []);
 
   return {
-    itineraryDays,
+    itineraryDays: filteredItineraryDays,
+    rawItineraryDays: itineraryDays,
     currentDay,
     currentFilteredActivities,
     selectedCategory,
@@ -79,6 +99,8 @@ export function useItinerary() {
     toggleActivityCompleted,
     dayTotals,
     tripTotals,
+    currentUser,
+    setCurrentUser,
     ...selectedDayHook,
   };
 }

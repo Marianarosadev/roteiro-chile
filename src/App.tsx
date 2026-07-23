@@ -30,6 +30,8 @@ export default function App() {
     toggleActivityCompleted,
     dayTotals,
     tripTotals,
+    currentUser,
+    setCurrentUser,
   } = useItinerary();
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -68,6 +70,8 @@ export default function App() {
         onToggleCalendar={() => setIsCalendarVisible(!isCalendarVisible)}
         calendarViewMode={calendarViewMode}
         onChangeCalendarViewMode={setCalendarViewMode}
+        currentUser={currentUser}
+        onChangeCurrentUser={setCurrentUser}
       />
 
       {/* Main Content Area: Timeline (Left) + Calendar (Right) */}

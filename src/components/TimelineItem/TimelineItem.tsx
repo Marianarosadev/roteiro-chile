@@ -3,7 +3,7 @@ import { Activity } from '../../types/itinerary';
 import { ActivityBadge } from '../ActivityBadge/ActivityBadge';
 import { CostBadge } from '../CostBadge/CostBadge';
 import { PaymentBadge } from '../PaymentBadge/PaymentBadge';
-import { Clock, Info, CheckCircle, Circle } from 'lucide-react';
+import { Clock, Info } from 'lucide-react';
 import { useActivityColor } from '../../hooks/useActivityColor';
 
 interface TimelineItemProps {
@@ -75,22 +75,6 @@ export const TimelineItem: React.FC<TimelineItemProps> = React.memo(({
 
           <div className="flex items-center gap-2">
             <ActivityBadge activityType={activity.activityType} />
-
-            {/* Toggle Complete Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleCompleted?.(activity.id);
-              }}
-              className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-              title={activity.completed ? 'Marcar como pendente' : 'Marcar como concluída'}
-            >
-              {activity.completed ? (
-                <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              ) : (
-                <Circle className="w-4 h-4 text-slate-300 dark:text-slate-600" />
-              )}
-            </button>
           </div>
         </div>
 
@@ -116,11 +100,13 @@ export const TimelineItem: React.FC<TimelineItemProps> = React.memo(({
           </div>
         )}
 
-        {/* Card Footer: Costs & Payment Details */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-          <CostBadge amountBRL={activity.amountBRL} amountCLP={activity.amountCLP} />
-          <PaymentBadge paymentStatus={activity.paymentStatus} paymentMethod={activity.paymentMethod} />
-        </div>
+        {/* Card Footer: Costs & Payment Details (only render when there are badges to show) */}
+        {(activity.amountBRL > 0 || activity.amountCLP > 0 || activity.paymentStatus || activity.paymentMethod) && (
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+            <CostBadge amountBRL={activity.amountBRL} amountCLP={activity.amountCLP} />
+            <PaymentBadge paymentStatus={activity.paymentStatus} paymentMethod={activity.paymentMethod} />
+          </div>
+        )}
       </div>
     </div>
   );
