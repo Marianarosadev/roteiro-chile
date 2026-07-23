@@ -146,6 +146,7 @@ export default function App() {
                 onNextDay={goToNextDay}
                 hasPrev={hasPrev}
                 hasNext={hasNext}
+                onOpenDaySelector={() => setIsDaySelectorOpen(true)}
               />
             </motion.section>
           )}
