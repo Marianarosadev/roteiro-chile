@@ -1,0 +1,6 @@
+{
+  "name": "Roteiro de Viagem - Santiago",
+  "description": "Visualização interativa de roteiro de viagem com timeline e calendário vertical estilo Google Calendar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
