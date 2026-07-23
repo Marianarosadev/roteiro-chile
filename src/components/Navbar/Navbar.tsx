@@ -31,29 +31,30 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
 }) => {
   return (
     <header className="w-full bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 shadow-sm">
-      <div className="max-w-full px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-full px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Left: Branding & Trip Title */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          {/* Airplane icon - hidden on mobile, visible on sm and up */}
+          <div className="hidden sm:flex w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 items-center justify-center text-white shadow-md shadow-sky-500/20 shrink-0">
             <Plane className="w-5 h-5" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-bold text-base sm:text-lg tracking-tight text-slate-50 leading-none">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h1 className="font-bold text-sm sm:text-lg tracking-tight text-slate-50 leading-none truncate">
                 {tripTitle}
               </h1>
-              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium bg-sky-950 text-sky-300 border border-sky-800 px-2 py-0.5 rounded-full">
+              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium bg-sky-950 text-sky-300 border border-sky-800 px-2 py-0.5 rounded-full shrink-0">
                 <MapPin className="w-3 h-3" /> Chile
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-medium hidden xs:block mt-0.5">
+            <p className="text-xs text-slate-400 font-medium hidden sm:block mt-0.5 truncate">
               Visualização de Timeline & Calendário
             </p>
           </div>
         </div>
 
         {/* Center/Right: Trip Stats & Settings */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
           {/* Trip Total Budget Badge */}
           <div className="hidden md:flex items-center gap-3 bg-slate-800/80 border border-slate-700/80 rounded-lg px-3 py-1.5 text-xs">
             <div className="flex items-center gap-1.5 text-slate-400 font-medium">
@@ -69,14 +70,14 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
 
           {/* User Selector Dropdown */}
           {onChangeCurrentUser && (
-            <div className="flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/80 rounded-lg px-2 sm:px-3 py-1.5 text-xs select-none shrink-0">
-              <User className="w-3.5 h-3.5 text-sky-400" />
-              <label htmlFor="user-select" className="text-slate-400 hidden xs:inline font-medium">Usuário:</label>
+            <div className="flex items-center gap-1 bg-slate-800/80 border border-slate-700/80 rounded-lg px-2 sm:px-3 py-1.5 text-xs select-none shrink-0">
+              <User className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+              <label htmlFor="user-select" className="text-slate-400 hidden sm:inline font-medium">Usuário:</label>
               <select
                 id="user-select"
                 value={currentUser}
                 onChange={(e) => onChangeCurrentUser(e.target.value)}
-                className="bg-transparent text-white font-semibold focus:outline-none cursor-pointer pr-1"
+                className="bg-transparent text-white font-semibold focus:outline-none cursor-pointer pr-0.5 text-xs"
               >
                 <option value="Todos" className="bg-slate-800 text-white font-medium">Todos</option>
                 <option value="Mariana" className="bg-slate-800 text-white font-medium">Mariana</option>
@@ -87,10 +88,24 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
             </div>
           )}
 
-          {/* Quick Action Buttons */}
-          <div className="flex items-center gap-2">
-            {isCalendarVisible && onChangeCalendarViewMode && (
-              <div className="flex items-center bg-slate-800 border border-slate-750 rounded-lg p-0.5 text-xs mr-1 shrink-0">
+          {/* Calendar View Mode Selector: Dropdown on Mobile, Buttons on Desktop */}
+          {isCalendarVisible && onChangeCalendarViewMode && (
+            <div className="flex items-center shrink-0">
+              {/* Mobile Select */}
+              <select
+                id="calendar-view-select"
+                value={calendarViewMode}
+                onChange={(e) => onChangeCalendarViewMode(e.target.value as CalendarViewMode)}
+                className="sm:hidden bg-slate-800 border border-slate-700 text-white font-semibold text-xs rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
+                aria-label="Modo de visualização do calendário"
+              >
+                <option value="day" className="bg-slate-800 text-white font-medium">Dia</option>
+                <option value="week" className="bg-slate-800 text-white font-medium">Semana</option>
+                <option value="month" className="bg-slate-800 text-white font-medium">Mês</option>
+              </select>
+
+              {/* Desktop Button Group */}
+              <div className="hidden sm:flex items-center bg-slate-800 border border-slate-750 rounded-lg p-0.5 text-xs">
                 {(['day', 'week', 'month'] as CalendarViewMode[]).map((mode) => {
                   const labels = {
                     day: 'Dia',
@@ -113,14 +128,18 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
                   );
                 })}
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Quick Action Buttons */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {onToggleCalendar && (
               <button
                 onClick={onToggleCalendar}
                 className={`p-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer ${
                   isCalendarVisible
-                    ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'
-                    : 'bg-sky-600 hover:bg-sky-500 text-white border-sky-600 shadow-md shadow-sky-600/20'
+                    ? 'bg-sky-600 hover:bg-sky-500 text-white border-sky-600 shadow-md shadow-sky-600/20'
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'
                 }`}
                 title={isCalendarVisible ? "Ocultar Calendário" : "Mostrar Calendário"}
                 aria-label={isCalendarVisible ? "Ocultar Calendário" : "Mostrar Calendário"}

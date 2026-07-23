@@ -14,6 +14,7 @@ interface DayHeaderProps {
   filteredCount: number;
   dayTotalBRL: number;
   dayTotalCLP: number;
+  onOpenDaySelector?: () => void;
 }
 
 export const DayHeader: React.FC<DayHeaderProps> = React.memo(({
@@ -26,6 +27,7 @@ export const DayHeader: React.FC<DayHeaderProps> = React.memo(({
   filteredCount,
   dayTotalBRL,
   dayTotalCLP,
+  onOpenDaySelector,
 }) => {
   const weekDay = getWeekDayName(currentDay.date);
   const formattedDate = formatDateShort(currentDay.date);
@@ -35,10 +37,22 @@ export const DayHeader: React.FC<DayHeaderProps> = React.memo(({
       {/* Top row: Day Navigation & Date */}
       <div className="flex items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
-            <CalendarIcon className="w-3.5 h-3.5" />
-            Dia {currentDay.day} • {weekDay}, {formattedDate}
-          </span>
+          {onOpenDaySelector ? (
+            <button
+              onClick={onOpenDaySelector}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border border-sky-200 dark:border-sky-800 hover:bg-sky-205 hover:bg-sky-200 dark:hover:bg-sky-900 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
+              title="Mudar dia do roteiro"
+              aria-label="Mudar dia do roteiro"
+            >
+              <CalendarIcon className="w-3.5 h-3.5" />
+              Dia {currentDay.day} • {weekDay}, {formattedDate}
+            </button>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+              <CalendarIcon className="w-3.5 h-3.5" />
+              Dia {currentDay.day} • {weekDay}, {formattedDate}
+            </span>
+          )}
           <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
             ({filteredCount} {filteredCount === 1 ? 'atividade' : 'atividades'})
           </span>

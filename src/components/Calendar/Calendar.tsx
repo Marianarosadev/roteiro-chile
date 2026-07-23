@@ -3,8 +3,8 @@ import { ItineraryDay } from '../../types/itinerary';
 import { HourGrid } from '../HourGrid/HourGrid';
 import { CalendarColumn } from '../CalendarColumn/CalendarColumn';
 import { useCalendarLayout } from '../../hooks/useCalendarLayout';
-import { Calendar as CalendarIcon, Info, X } from 'lucide-react';
-import { timeToMinutes, getMonthGrid } from '../../utils/time';
+import { Calendar as CalendarIcon, Info, X, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { timeToMinutes, getMonthGrid, formatDateShort } from '../../utils/time';
 
 interface CalendarProps {
   days: ItineraryDay[];
@@ -16,6 +16,11 @@ interface CalendarProps {
   onHoverActivity: (id: string | null) => void;
   onClose?: () => void;
   viewMode?: 'day' | 'week' | 'month';
+  onPrevDay?: () => void;
+  onNextDay?: () => void;
+  hasPrev?: boolean;
+  hasNext?: boolean;
+  onOpenDaySelector?: () => void;
 }
 
 export const Calendar: React.FC<CalendarProps> = React.memo(({
@@ -28,6 +33,11 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
   onHoverActivity,
   onClose,
   viewMode = 'month',
+  onPrevDay,
+  onNextDay,
+  hasPrev,
+  hasNext,
+  onOpenDaySelector,
 }) => {
   const {
     hoursList,
@@ -37,6 +47,29 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
     getEventHeight,
     startHour,
   } = useCalendarLayout(4.5); // 4.5px per minute scale
+
+  // Navigation handlers for day mode
+  const canGoPrev = hasPrev !== undefined ? hasPrev : selectedDayNumber > 1;
+  const canGoNext = hasNext !== undefined ? hasNext : selectedDayNumber < 8;
+
+  const handlePrevDay = () => {
+    if (onPrevDay) {
+      onPrevDay();
+    } else if (canGoPrev) {
+      onSelectDay(selectedDayNumber - 1);
+    }
+  };
+
+  const handleNextDay = () => {
+    if (onNextDay) {
+      onNextDay();
+    } else if (canGoNext) {
+      onSelectDay(selectedDayNumber + 1);
+    }
+  };
+
+  const activeDay = days.find((d) => d.day === selectedDayNumber);
+  const dateFormatted = activeDay ? formatDateShort(activeDay.date) : '';
 
   // Current time line calculation if today corresponds to trip dates
   const [currentTimeMinutes, setCurrentTimeMinutes] = useState<number | null>(null);
@@ -74,6 +107,75 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
 
   return (
     <div className="h-full flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
+      {/* Mobile Header with day navigation and close button */}
+      {onClose && (
+        <div className="lg:hidden flex items-center justify-between px-3 py-2 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-xs shrink-0 gap-2">
+          <div className="flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200 min-w-0">
+            <CalendarIcon className="w-4 h-4 text-sky-500 shrink-0" />
+            <span className="shrink-0">
+              {viewMode === 'day' && dateFormatted ? dateFormatted : 'Calendário'}
+            </span>
+            {viewMode === 'day' ? (
+              onOpenDaySelector ? (
+                <button
+                  onClick={onOpenDaySelector}
+                  className="flex items-center gap-1 ml-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 px-2 py-0.5 rounded-md text-[11px] font-bold text-sky-600 dark:text-sky-400 shrink-0 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                  title="Selecionar dia do roteiro"
+                  aria-label="Selecionar dia do roteiro"
+                >
+                  <span>Dia {selectedDayNumber}</span>
+                  <ChevronDown className="w-3 h-3 text-slate-500 dark:text-slate-400" />
+                </button>
+              ) : (
+                <div className="flex items-center gap-1 ml-1 bg-slate-200 dark:bg-slate-700/80 px-1.5 py-0.5 rounded-md text-[11px] shrink-0">
+                  <button
+                    onClick={handlePrevDay}
+                    disabled={!canGoPrev}
+                    className={`p-0.5 rounded transition-colors ${
+                      canGoPrev
+                        ? 'hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 cursor-pointer'
+                        : 'text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                    }`}
+                    title="Dia anterior"
+                    aria-label="Dia anterior"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="font-bold text-sky-600 dark:text-sky-400 px-0.5 whitespace-nowrap">
+                    Dia {selectedDayNumber}
+                  </span>
+                  <button
+                    onClick={handleNextDay}
+                    disabled={!canGoNext}
+                    className={`p-0.5 rounded transition-colors ${
+                      canGoNext
+                        ? 'hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 cursor-pointer'
+                        : 'text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                    }`}
+                    title="Próximo dia"
+                    aria-label="Próximo dia"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )
+            ) : (
+              <span className="text-slate-500 dark:text-slate-400 font-normal shrink-0">
+                ({viewMode === 'week' ? 'Semana' : 'Mês'})
+              </span>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1 px-2 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-medium shrink-0"
+            title="Fechar Calendário"
+            aria-label="Fechar Calendário"
+          >
+            <span>Fechar</span>
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Main Area: Render columns or month grid */}
       {viewMode === 'month' ? (

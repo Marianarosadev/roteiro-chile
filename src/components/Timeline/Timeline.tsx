@@ -25,6 +25,7 @@ interface TimelineProps {
   onToggleCompleted: (id: string) => void;
   dayTotalBRL: number;
   dayTotalCLP: number;
+  onOpenDaySelector?: () => void;
 }
 
 export const Timeline: React.FC<TimelineProps> = React.memo(({
@@ -41,6 +42,7 @@ export const Timeline: React.FC<TimelineProps> = React.memo(({
   onToggleCompleted,
   dayTotalBRL,
   dayTotalCLP,
+  onOpenDaySelector,
 }) => {
   return (
     <div className="h-full flex flex-col bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 overflow-hidden">
@@ -55,6 +57,7 @@ export const Timeline: React.FC<TimelineProps> = React.memo(({
         filteredCount={filteredActivities.length}
         dayTotalBRL={dayTotalBRL}
         dayTotalCLP={dayTotalCLP}
+        onOpenDaySelector={onOpenDaySelector}
       />
 
       {/* Timeline Activities List */}
